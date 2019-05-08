@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qlm.dao.LoginUserDAODAODAO">
+    <sql id="tableName">
+        login_user
+    </sql>
+    <insert id="create" parameterType="com.qlml.entity.LoginUser" useGeneratedKeys="false">
+        INSERT INTO <include refid="tableName" />
+         (user_id, login_name, status, org_id, full_name, email, 
+            create_time, system_admin, org_links, with_option, create_user)
+        VALUES 
+           (#{userId}, #{loginName}, #{status}, #{orgId}, #{fullName}, #{email}, 
+            #{createTime}, #{systemAdmin}, #{orgLinks}, #{withOption}, #{createUser})
+    </insert>
+    <sql id="selectColumns">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        SELECT
+        t.user_id  userId,
+        t.login_name  loginName,
+        t.status  status,
+        t.org_id  orgId,
+        t.full_name  fullName,
+        t.email  email,
+        t.create_time  createTime,
+        t.system_admin  systemAdmin,
+        t.org_links  orgLinks,
+        t.with_option  withOption,
+        t.create_user  createUser
+        FROM
+         <include refid="tableName" /> t
+    </sql>
+    <delete id="deleteById" parameterType="Integer">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        DELETE FROM 
+        <include refid="tableName" />
+        WHERE
+        user_id = #{userId}
+    </delete>
+    <select id="loadAll" resultType="com.qlml.entity.LoginUser">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        <include refid="selectColumns" />
+    </select>
+    <select id="findById" resultType="com.qlml.entity.LoginUser">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        <include refid="selectColumns" />
+        WHERE user_id = #{userId}
+    </select>
+    <sql id="pageConditions">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        <where>
+            <if test="user_id !=null">
+                AND t.user_id = #{userId}
+            </if>
+            <if test="login_name != '' and login_name !=null">
+                AND t.login_name = #{loginName}
+            </if>
+            <if test="status != '' and status !=null">
+                AND t.status = #{status}
+            </if>
+            <if test="org_id != '' and org_id !=null">
+                AND t.org_id = #{orgId}
+            </if>
+            <if test="full_name != '' and full_name !=null">
+                AND t.full_name = #{fullName}
+            </if>
+            <if test="email != '' and email !=null">
+                AND t.email = #{email}
+            </if>
+            <if test="create_time != '' and create_time !=null">
+                AND t.create_time = #{createTime}
+            </if>
+            <if test="system_admin != '' and system_admin !=null">
+                AND t.system_admin = #{systemAdmin}
+            </if>
+            <if test="org_links != '' and org_links !=null">
+                AND t.org_links = #{orgLinks}
+            </if>
+            <if test="with_option != '' and with_option !=null">
+                AND t.with_option = #{withOption}
+            </if>
+            <if test="create_user != '' and create_user !=null">
+                AND t.create_user = #{createUser}
+            </if>
+        </where>
+    </sql>
+    <select id="findBySelective" resultType="com.qlml.entity.LoginUser">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        <include refid="selectColumns" />
+        <include refid="pageConditions" />
+        <if test="orderStr != '' and orderStr != null">
+            		ORDER BY ${orderStr}
+        </if>
+    </select>
+    <select id="findBySelective_COUNT" parameterType="com.qlml.entity.LoginUser" resultType="Integer">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        SELECT COUNT(1) FROM
+        <include refid="tableName" /> t
+        <include refid="pageConditions" />
+    </select>
+    <select id="existsBySelective" parameterType="com.qlml.entity.LoginUser" resultType="Integer">
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        SELECT 1 FROM
+        <include refid="tableName" /> t
+        <include refid="pageConditions" />
+        LIMIT 1 
+    </select>
+    <sql id="update_sql">
+        UPDATE <include refid="tableName" />
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        <set>
+            <if test="login_name !=null">
+                login_name = #{loginName},
+            </if>
+            <if test="status !=null">
+                status = #{status},
+            </if>
+            <if test="org_id !=null">
+                org_id = #{orgId},
+            </if>
+            <if test="full_name !=null">
+                full_name = #{fullName},
+            </if>
+            <if test="email !=null">
+                email = #{email},
+            </if>
+            <if test="create_time !=null">
+                create_time = #{createTime},
+            </if>
+            <if test="system_admin !=null">
+                system_admin = #{systemAdmin},
+            </if>
+            <if test="org_links !=null">
+                org_links = #{orgLinks},
+            </if>
+            <if test="with_option !=null">
+                with_option = #{withOption},
+            </if>
+            <if test="create_user !=null">
+                create_user = #{createUser},
+            </if>
+        </set>
+    </sql>
+    <update parameterType="com.qlml.entity.LoginUser">
+        <include refid="update_sql" />
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+    </update>
+    <sql id="tableName">
+        login_user
+    </sql>
+    <insert id="create" parameterType="com.qlml.entity.LoginUser" useGeneratedKeys="false">
+        INSERT INTO <include refid="tableName" />
+         (user_id, login_name, status, org_id, full_name, email, 
+            create_time, system_admin, org_links, with_option, create_user)
+        VALUES 
+           (#{userId}, #{loginName}, #{status}, #{orgId}, #{fullName}, #{email}, 
+            #{createTime}, #{systemAdmin}, #{orgLinks}, #{withOption}, #{createUser})
+    </insert>
+    <sql id="update_sql">
+        UPDATE <include refid="tableName" />
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+        <set>
+            <if test="login_name !=null">
+                login_name = #{loginName},
+            </if>
+            <if test="status !=null">
+                status = #{status},
+            </if>
+            <if test="org_id !=null">
+                org_id = #{orgId},
+            </if>
+            <if test="full_name !=null">
+                full_name = #{fullName},
+            </if>
+            <if test="email !=null">
+                email = #{email},
+            </if>
+            <if test="create_time !=null">
+                create_time = #{createTime},
+            </if>
+            <if test="system_admin !=null">
+                system_admin = #{systemAdmin},
+            </if>
+            <if test="org_links !=null">
+                org_links = #{orgLinks},
+            </if>
+            <if test="with_option !=null">
+                with_option = #{withOption},
+            </if>
+            <if test="create_user !=null">
+                create_user = #{createUser},
+            </if>
+        </set>
+    </sql>
+    <update parameterType="com.qlml.entity.LoginUser">
+        <include refid="update_sql" />
+        <!--
+          WARNING - @mbggenerated
+          这是龚大神改良的生成工具.重庆长护险定制版
+        -->
+    </update>
+</mapper>
