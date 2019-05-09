@@ -83,6 +83,8 @@ public class Context extends PropertyHolder {
     private JavaFormatter javaFormatter;
     
     private XmlFormatter xmlFormatter;
+    //controller
+    private ControllerGeneratorConfiguration controllerGeneratorConfiguration;
 
     /**
      * Constructs a Context object.
@@ -109,6 +111,14 @@ public class Context extends PropertyHolder {
 
     public JDBCConnectionConfiguration getJdbcConnectionConfiguration() {
         return jdbcConnectionConfiguration;
+    }
+
+    public ControllerGeneratorConfiguration getControllerGeneratorConfiguration() {
+        return controllerGeneratorConfiguration;
+    }
+
+    public void setControllerGeneratorConfiguration(ControllerGeneratorConfiguration controllerGeneratorConfiguration) {
+        this.controllerGeneratorConfiguration = controllerGeneratorConfiguration;
     }
 
     public JavaClientGeneratorConfiguration getJavaClientGeneratorConfiguration() {
@@ -421,9 +431,7 @@ public class Context extends PropertyHolder {
      * @throws InterruptedException
      *             if the progress callback reports a cancel
      */
-    public void introspectTables(ProgressCallback callback,
-            List<String> warnings, Set<String> fullyQualifiedTableNames)
-            throws SQLException, InterruptedException {
+    public void introspectTables(ProgressCallback callback, List<String> warnings, Set<String> fullyQualifiedTableNames) throws SQLException, InterruptedException {
 
         introspectedTables = new ArrayList<IntrospectedTable>();
         JavaTypeResolver javaTypeResolver = ObjectFactory
@@ -435,8 +443,7 @@ public class Context extends PropertyHolder {
             callback.startTask(getString("Progress.0")); //$NON-NLS-1$
             connection = getConnection();
 
-            DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(
-                    this, connection.getMetaData(), javaTypeResolver, warnings);
+            DatabaseIntrospector databaseIntrospector = new DatabaseIntrospector(this, connection.getMetaData(), javaTypeResolver, warnings);
 
             for (TableConfiguration tc : tableConfigurations) {
                 String tableName = composeFullyQualifiedTableName(tc.getCatalog(), tc
@@ -455,8 +462,7 @@ public class Context extends PropertyHolder {
                 }
 
                 callback.startTask(getString("Progress.1", tableName)); //$NON-NLS-1$
-                List<IntrospectedTable> tables = databaseIntrospector
-                        .introspectTables(tc);
+                List<IntrospectedTable> tables = databaseIntrospector.introspectTables(tc);
 
                 if (tables != null) {
                     introspectedTables.addAll(tables);
@@ -504,10 +510,8 @@ public class Context extends PropertyHolder {
 
                 introspectedTable.initialize();
                 introspectedTable.calculateGenerators(warnings, callback);
-                generatedJavaFiles.addAll(introspectedTable
-                        .getGeneratedJavaFiles());
-                generatedXmlFiles.addAll(introspectedTable
-                        .getGeneratedXmlFiles());
+                generatedJavaFiles.addAll(introspectedTable.getGeneratedJavaFiles());
+                generatedXmlFiles.addAll(introspectedTable.getGeneratedXmlFiles());
 
                 generatedJavaFiles.addAll(pluginAggregator
                         .contextGenerateAdditionalJavaFiles(introspectedTable));

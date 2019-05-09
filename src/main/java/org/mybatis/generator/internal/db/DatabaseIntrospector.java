@@ -599,6 +599,8 @@ public class DatabaseIntrospector {
                             .getSchema() : null,
                     atn.getTableName(),
                     tc.getDomainObjectName(),
+                    tc.getDomainObjectQueryName(),
+                    tc.getDomainObjectInputName(),
                     tc.getAlias(),
                     isTrue(tc.getProperty(PropertyRegistry.TABLE_IGNORE_QUALIFIERS_AT_RUNTIME)),
                     tc.getProperty(PropertyRegistry.TABLE_RUNTIME_CATALOG),

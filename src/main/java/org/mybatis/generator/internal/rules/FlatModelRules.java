@@ -43,6 +43,16 @@ public class FlatModelRules extends BaseRules {
         return false;
     }
 
+    @Override
+    public boolean generateQueryModelGenerator() {
+        return false;
+    }
+
+    @Override
+    public boolean generateInputModelGenerator() {
+        return false;
+    }
+
     /**
      * We always generate a base record in the flat model.
      * 

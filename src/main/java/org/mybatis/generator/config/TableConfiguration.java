@@ -66,6 +66,14 @@ public class TableConfiguration extends PropertyHolder {
     private String schema;
     private String tableName;
     private String domainObjectName;
+    //长护险独特
+    private String domainObjectQueryName;
+    private String domainObjectInputName;
+
+    private boolean isQueryModel;
+
+    private boolean isInputModel;
+
     private String alias;
     private ModelType modelType;
     private boolean wildcardEscapingEnabled;
@@ -280,6 +288,30 @@ public class TableConfiguration extends PropertyHolder {
     public void setDomainObjectName(String domainObjectName) {
         this.domainObjectName = domainObjectName;
     }
+    public String getDomainObjectQueryName() {
+        return domainObjectQueryName;
+    }
+
+    public void setDomainObjectQueryName(String domainObjectQueryName) {
+          this.isQueryModel=true;
+        this.domainObjectQueryName = domainObjectQueryName;
+    }
+    public String getDomainObjectInputName() {
+        return domainObjectInputName;
+    }
+
+    public void setDomainObjectInputName(String domainObjectInputName) {
+        this.isInputModel=true;
+        this.domainObjectInputName = domainObjectInputName;
+    }
+
+    public boolean isQueryModel() {
+        return isQueryModel;
+    }
+
+    public boolean isInputModel() {
+        return isInputModel;
+    }
 
     public String getSchema() {
         return schema;
@@ -478,6 +510,7 @@ public class TableConfiguration extends PropertyHolder {
     public boolean isUpdateByExampleStatementEnabled() {
         return updateByExampleStatementEnabled;
     }
+
 
     public void setUpdateByExampleStatementEnabled(
             boolean updateByExampleStatementEnabled) {

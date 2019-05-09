@@ -43,6 +43,30 @@ public class ConditionalModelRules extends BaseRules {
     public boolean generatePrimaryKeyClass() {
         return introspectedTable.getPrimaryKeyColumns().size() > 1;
     }
+/**
+ * 功能描述: 获取是否需要创建query实体类
+ * @auther: gxz
+ * @param:
+ * @return:
+ * @date: 2019/5/9 15:15
+   */
+    @Override
+    public boolean generateQueryModelGenerator() {
+        return introspectedTable.getTableConfiguration().isQueryModel();
+    }
+
+    /**
+     * 功能描述: 获取是否需要创建input实体类
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/9 15:15
+     */
+    @Override
+    public boolean generateInputModelGenerator() {
+        return introspectedTable.getTableConfiguration().isInputModel();
+    }
+
 
     /**
      * Generate a base record if there are any base columns, or if there is only
@@ -73,4 +97,5 @@ public class ConditionalModelRules extends BaseRules {
         return otherColumnCount > 1
                 && introspectedTable.getBLOBColumns().size() > 1;
     }
+
 }

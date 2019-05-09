@@ -23,9 +23,7 @@ import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.AbstractXmlElementGenerator;
 
 /**
- * 
  * @author Jeff Butler
- * 
  */
 public class DeleteByIdElementGenerator extends
         AbstractXmlElementGenerator {
@@ -43,9 +41,9 @@ public class DeleteByIdElementGenerator extends
         answer.addAttribute(new Attribute(
                 "id", "deleteById")); //$NON-NLS-1$
 
-        answer.addAttribute(new Attribute("parameterType",MyBatis3FormattingUtilities.getPrimaryKeyType(introspectedTable))); //$NON-NLS-1$
+        answer.addAttribute(new Attribute("parameterType", MyBatis3FormattingUtilities.getPrimaryKeyType(introspectedTable))); //$NON-NLS-1$
 
-       /* context.getCommentGenerator().addComment(answer);*/
+        /* context.getCommentGenerator().addComment(answer);*/
 
         StringBuilder sb = new StringBuilder();
         sb.append("DELETE FROM "); //$NON-NLS-1$

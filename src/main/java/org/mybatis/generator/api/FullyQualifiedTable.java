@@ -42,6 +42,10 @@ public class FullyQualifiedTable {
     private String runtimeTableName;
 
     private String domainObjectName;
+
+    private String domainObjectQueryName;
+
+    private String domainObjectInputName;
     
     private String domainObjectSubPackage;
 
@@ -113,8 +117,7 @@ public class FullyQualifiedTable {
      *            Context.
      */
     public FullyQualifiedTable(String introspectedCatalog,
-            String introspectedSchema, String introspectedTableName,
-            String domainObjectName, String alias,
+            String introspectedSchema, String introspectedTableName, String domainObjectName,String domainObjectQueryName,String domainObjectInputName, String alias,
             boolean ignoreQualifiersAtRuntime, String runtimeCatalog,
             String runtimeSchema, String runtimeTableName,
             boolean delimitIdentifiers, Context context) {
@@ -126,7 +129,9 @@ public class FullyQualifiedTable {
         this.runtimeCatalog = runtimeCatalog;
         this.runtimeSchema = runtimeSchema;
         this.runtimeTableName = runtimeTableName;
-        
+        //重庆长护险
+        this.domainObjectInputName=domainObjectInputName;
+        this.domainObjectQueryName=domainObjectQueryName;
         if (stringHasValue(domainObjectName)) {
             int index = domainObjectName.lastIndexOf('.');
             if (index == -1) {
@@ -136,6 +141,9 @@ public class FullyQualifiedTable {
                 this.domainObjectSubPackage = domainObjectName.substring(0, index);
             }
         }
+
+
+
 
         if (alias == null) {
             this.alias = null;
@@ -149,6 +157,12 @@ public class FullyQualifiedTable {
                 : ""; //$NON-NLS-1$
     }
 
+    public String getDomainObjectQueryName() {
+        return domainObjectQueryName;
+    }
+    public String getDomainObjectInputName() {
+        return domainObjectInputName;
+    }
     public String getIntrospectedCatalog() {
         return introspectedCatalog;
     }
@@ -160,6 +174,7 @@ public class FullyQualifiedTable {
     public String getIntrospectedTableName() {
         return introspectedTableName;
     }
+
 
     /**
      * @return

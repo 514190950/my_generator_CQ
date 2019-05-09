@@ -220,6 +220,10 @@ public interface Rules {
      */
     boolean generatePrimaryKeyClass();
 
+    boolean generateQueryModelGenerator();
+
+    boolean generateInputModelGenerator();
+
     /**
      * Implements the rule for generating a base record.
      * 
@@ -245,6 +249,8 @@ public interface Rules {
      * @return true if the Java client should be generated
      */
     boolean generateJavaClient();
+
+
 
     IntrospectedTable getIntrospectedTable();
 }

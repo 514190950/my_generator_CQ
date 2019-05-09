@@ -49,7 +49,7 @@
   tables.
 -->
 <!ELEMENT context (property*, plugin*, commentGenerator?, jdbcConnection, javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?, table+)>
+                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?,controllerGenerator?,table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
@@ -135,6 +135,13 @@
   targetProject CDATA #REQUIRED
   implementationPackage CDATA #IMPLIED>
 
+<!--添加controller的约束  auth:gxz-->
+<!ELEMENT controllerGenerator (property*)>
+<!ATTLIST controllerGenerator
+targetPackage CDATA #REQUIRED
+targetProject CDATA #REQUIRED
+作者:gxz CDATA #IMPLIED>
+
 <!--
   The table element is used to specify a database table that will be the source information
   for a set of generated objects.
@@ -146,6 +153,8 @@
   tableName CDATA #REQUIRED
   alias CDATA #IMPLIED
   domainObjectName CDATA #IMPLIED
+  domainObjectQueryName CDATA #IMPLIED
+  domainObjectInputName CDATA #IMPLIED
   enableInsert CDATA #IMPLIED
   enableSelectByPrimaryKey CDATA #IMPLIED
   enableSelectByExample CDATA #IMPLIED

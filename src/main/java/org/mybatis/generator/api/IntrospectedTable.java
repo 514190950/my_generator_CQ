@@ -65,6 +65,9 @@ public abstract class IntrospectedTable {
         ATTR_IBATIS2_SQL_MAP_NAMESPACE,
         ATTR_MYBATIS3_XML_MAPPER_PACKAGE,
         ATTR_MYBATIS3_XML_MAPPER_FILE_NAME,
+        //添加重庆长护险两个实体类
+        ATTR_MODEL_QUERY,
+        ATTR_MODEL_INPUT,
         /** also used as XML Mapper namespace if a Java mapper is generated */
         ATTR_MYBATIS3_JAVA_MAPPER_TYPE,
         /** used as XML Mapper namespace if no client is generated */
@@ -93,6 +96,7 @@ public abstract class IntrospectedTable {
         ATTR_BLOB_COLUMN_LIST_ID,
         ATTR_MYBATIS3_UPDATE_BY_EXAMPLE_WHERE_CLAUSE_ID,
         ATTR_MYBATIS3_SQL_PROVIDER_TYPE
+
     }
 
     protected TableConfiguration tableConfiguration;
@@ -344,6 +348,13 @@ public abstract class IntrospectedTable {
      */
     public String getBaseRecordType() {
         return internalAttributes.get(InternalAttribute.ATTR_BASE_RECORD_TYPE);
+    }
+    public String getModelQueryType() {
+        return internalAttributes.get(InternalAttribute.ATTR_MODEL_QUERY);
+    }
+
+    public String getModelInputType() {
+        return internalAttributes.get(InternalAttribute.ATTR_MODEL_INPUT);
     }
 
     /**
@@ -806,7 +817,7 @@ public abstract class IntrospectedTable {
         }
 
         StringBuilder sb = new StringBuilder();
-        sb.append(calculateJavaClientImplementationPackage());
+        sb.append(calculateJavaClientImplementationPackage()); //这是接受到的包名
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("DAOImpl"); //$NON-NLS-1$
@@ -860,6 +871,18 @@ public abstract class IntrospectedTable {
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         setBaseRecordType(sb.toString());
+
+        sb.setLength(0);
+        sb.append(pakkage);
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectQueryName());
+        setModelQueryType(sb.toString());
+
+        sb.setLength(0);
+        sb.append(pakkage);
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectInputName());
+        setModelInputType(sb.toString());
 
         sb.setLength(0);
         sb.append(pakkage);
@@ -1030,6 +1053,14 @@ public abstract class IntrospectedTable {
     public void setBaseRecordType(String baseRecordType) {
         internalAttributes.put(InternalAttribute.ATTR_BASE_RECORD_TYPE,
                 baseRecordType);
+    }
+    public void setModelQueryType(String modelQueryType) {
+        internalAttributes.put(InternalAttribute.ATTR_MODEL_QUERY,
+                modelQueryType);
+    }
+    public void setModelInputType(String modelInputType) {
+        internalAttributes.put(InternalAttribute.ATTR_MODEL_INPUT,
+                modelInputType);
     }
 
     public void setRecordWithBLOBsType(String recordWithBLOBsType) {

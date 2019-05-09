@@ -45,6 +45,16 @@ public class HierarchicalModelRules extends BaseRules {
         return introspectedTable.hasPrimaryKeyColumns();
     }
 
+    @Override
+    public boolean generateQueryModelGenerator() {
+        return false;
+    }
+
+    @Override
+    public boolean generateInputModelGenerator() {
+        return false;
+    }
+
     /**
      * Implements the rule for generating a base record. If the table has fields
      * that are not in the primary key, and non-BLOB fields, then generate the

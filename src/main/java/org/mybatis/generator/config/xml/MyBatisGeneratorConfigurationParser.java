@@ -22,22 +22,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
-import org.mybatis.generator.config.ColumnOverride;
-import org.mybatis.generator.config.ColumnRenamingRule;
-import org.mybatis.generator.config.CommentGeneratorConfiguration;
-import org.mybatis.generator.config.Configuration;
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.GeneratedKey;
-import org.mybatis.generator.config.IgnoredColumn;
-import org.mybatis.generator.config.JDBCConnectionConfiguration;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
-import org.mybatis.generator.config.JavaTypeResolverConfiguration;
-import org.mybatis.generator.config.ModelType;
-import org.mybatis.generator.config.PluginConfiguration;
-import org.mybatis.generator.config.PropertyHolder;
-import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
-import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.config.*;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.w3c.dom.Element;
@@ -181,6 +166,8 @@ public class MyBatisGeneratorConfigurationParser {
                 parseJavaClientGenerator(context, childNode);
             } else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseTable(context, childNode);
+            } else if ("controllerGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseControllerGenerator(context, childNode);
             }
         }
     }
@@ -210,7 +197,30 @@ public class MyBatisGeneratorConfigurationParser {
             }
         }
     }
+    private void parseControllerGenerator(Context context, Node node) {
+        ControllerGeneratorConfiguration sqlMapGeneratorConfiguration = new ControllerGeneratorConfiguration();
+        context.setControllerGeneratorConfiguration(sqlMapGeneratorConfiguration);
 
+        Properties attributes = parseAttributes(node);
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        sqlMapGeneratorConfiguration.setTargetPackage(targetPackage);
+        sqlMapGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(sqlMapGeneratorConfiguration, childNode);
+            }
+        }
+    }
     private void parseTable(Context context, Node node) {
         TableConfiguration tc = new TableConfiguration(context);
         context.addTableConfiguration(tc);
@@ -220,6 +230,8 @@ public class MyBatisGeneratorConfigurationParser {
         String schema = attributes.getProperty("schema"); //$NON-NLS-1$
         String tableName = attributes.getProperty("tableName"); //$NON-NLS-1$
         String domainObjectName = attributes.getProperty("domainObjectName"); //$NON-NLS-1$
+        String domainObjectQueryName = attributes.getProperty("domainObjectQueryName"); //$NON-NLS-1$
+        String domainObjectInputName = attributes.getProperty("domainObjectInputName"); //$NON-NLS-1$
         String alias = attributes.getProperty("alias"); //$NON-NLS-1$
         String enableInsert = attributes.getProperty("enableInsert"); //$NON-NLS-1$
         String enableSelectByPrimaryKey = attributes
@@ -260,6 +272,12 @@ public class MyBatisGeneratorConfigurationParser {
 
         if (stringHasValue(domainObjectName)) {
             tc.setDomainObjectName(domainObjectName);
+        }
+        if (stringHasValue(domainObjectQueryName)) {
+            tc.setDomainObjectQueryName(domainObjectQueryName);
+        }
+        if (stringHasValue(domainObjectInputName)) {
+            tc.setDomainObjectInputName(domainObjectInputName);
         }
 
         if (stringHasValue(alias)) {

@@ -105,6 +105,16 @@ public class RulesDelegate implements Rules {
         return rules.generatePrimaryKeyClass();
     }
 
+    @Override
+    public boolean generateQueryModelGenerator() {
+        return false;
+    }
+
+    @Override
+    public boolean generateInputModelGenerator() {
+        return false;
+    }
+
     public boolean generateRecordWithBLOBsClass() {
         return rules.generateRecordWithBLOBsClass();
     }

@@ -31,6 +31,7 @@ import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.config.PropertyRegistry;
+import org.omg.CosNaming.NamingContextPackage.NotEmpty;
 
 /**
  * 
@@ -86,6 +87,21 @@ public abstract class AbstractJavaGenerator extends AbstractGenerator {
         field.setName(property);
         context.getCommentGenerator().addFieldComment(field,
                 introspectedTable, introspectedColumn);
+
+        return field;
+    }
+
+    public Field getJavaBeansInputField(IntrospectedColumn introspectedColumn) {
+        FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
+        String property = introspectedColumn.getJavaProperty();
+        StringBuilder sb=new StringBuilder();
+        Field field = new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setType(fqjt);
+        field.setName(property);
+        sb.append("@InputValid(label=\""+introspectedColumn.getRemarks()+"\",NotEmpty=");
+            sb.append((!introspectedColumn.isNullable())).append(")");
+        field.addAnnotation(sb.toString());
 
         return field;
     }

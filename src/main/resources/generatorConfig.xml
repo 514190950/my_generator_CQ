@@ -18,7 +18,8 @@
 
         <!-- jdbc连接 -->
         <jdbcConnection driverClass="${driverClassName}"
-                        connectionURL="${url}" userId="${username}"
+                        connectionURL="${url}"
+                        userId="${username}"
                         password="${password}" />
 
         <!-- 类型转换 -->
@@ -28,8 +29,7 @@
         </javaTypeResolver>
 
         <!-- 生成实体类的包名和位置 注意targetProject的值为实体类放在工程中具体位置的相对路径，-->
-        <javaModelGenerator targetPackage="com.qlml.entity"
-                            targetProject="./src" >
+        <javaModelGenerator targetPackage="com.qlml.entity" targetProject="./src" >
             <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
             <property name="enableSubPackages" value="true"/>
             <!-- 是否针对string类型的字段在set的时候进行trim调用 -->
@@ -50,11 +50,18 @@
             <property name="enableSubPackages" value="true" />
         </javaClientGenerator>
 
+        <!-- 生成controller的包名和位置，这里配置将生成的dao类放在com.qlm.controller这个包下 -->
+        <controllerGenerator targetPackage="com.qlm.controller"
+                             targetProject="./src"   >
+            <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
+            <property name="enableSubPackages" value="true" />
+        </controllerGenerator>
+
         <!-- 配置表信息 -->
         <!-- schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类 enable*ByExample
                 是否生成 example类   -->
         <!-- 更改tableName和domainObjectName就可以 -->
-        <table  tableName="login_user"></table>
+        <table  tableName="login_user" domainObjectName="大傻逼" domainObjectQueryName="二傻逼" domainObjectInputName="三傻逼" ></table>
         <table  tableName="role_menu"></table>
     </context>
 </generatorConfiguration>
