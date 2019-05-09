@@ -40,7 +40,7 @@ public class UpdateSqlElementGenerator extends
 
         answer.addAttribute(new Attribute("id", "update_sql")); //$NON-NLS-1$
         answer.addElement(new TextElement("UPDATE <include refid=\"tableName\"/>"));
-        context.getCommentGenerator().addComment(answer);
+        //     context.getCommentGenerator().addComment(answer);
         XmlElement setElement = new XmlElement("set");
         answer.addElement(setElement);
 

@@ -42,7 +42,7 @@ public class UpdateElementGenerator extends
         resultType = introspectedTable.getRules().calculateAllFieldsClass();
         answer.addAttribute(new Attribute("parameterType",resultType.getFullyQualifiedName()));
         answer.addElement(new TextElement("<include refid=\"update_sql\"/>"));
-        context.getCommentGenerator().addComment(answer);
+        //     context.getCommentGenerator().addComment(answer);
 
 
 

@@ -40,7 +40,7 @@ public class PageConditionsElementGenerator extends
 
         answer.addAttribute(new Attribute("id", "pageConditions")); //$NON-NLS-1$
 
-        context.getCommentGenerator().addComment(answer);
+        //  context.getCommentGenerator().addComment(answer);
         XmlElement whereElement = new XmlElement("where");
         answer.addElement(whereElement);
 

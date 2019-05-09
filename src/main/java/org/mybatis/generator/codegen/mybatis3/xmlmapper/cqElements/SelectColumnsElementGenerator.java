@@ -44,7 +44,7 @@ public class SelectColumnsElementGenerator extends
 
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
                 "selectColumns"));
-        context.getCommentGenerator().addComment(answer);
+        //  context.getCommentGenerator().addComment(answer);
 
         answer.addElement(new TextElement("SELECT")); //$NON-NLS-1$
         Iterator<IntrospectedColumn> iter = introspectedTable.getAllColumns().iterator();

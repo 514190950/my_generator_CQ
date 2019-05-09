@@ -45,7 +45,7 @@ public class DeleteByIdElementGenerator extends
 
         answer.addAttribute(new Attribute("parameterType",MyBatis3FormattingUtilities.getPrimaryKeyType(introspectedTable))); //$NON-NLS-1$
 
-        context.getCommentGenerator().addComment(answer);
+       /* context.getCommentGenerator().addComment(answer);*/
 
         StringBuilder sb = new StringBuilder();
         sb.append("DELETE FROM "); //$NON-NLS-1$

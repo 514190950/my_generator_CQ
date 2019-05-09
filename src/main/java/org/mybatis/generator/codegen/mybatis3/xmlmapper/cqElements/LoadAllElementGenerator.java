@@ -48,7 +48,7 @@ public class LoadAllElementGenerator extends
         resultType = introspectedTable.getRules().calculateAllFieldsClass();
 
         answer.addAttribute(new Attribute("resultType",resultType.getFullyQualifiedName()));
-        context.getCommentGenerator().addComment(answer);
+        //  context.getCommentGenerator().addComment(answer);
 
         answer.addElement(new TextElement("<include refid=\"selectColumns\" />")); //$NON-NLS-1$
 

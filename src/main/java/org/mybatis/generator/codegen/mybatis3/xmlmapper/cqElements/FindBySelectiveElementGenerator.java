@@ -36,7 +36,7 @@ public class FindBySelectiveElementGenerator extends
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
-        context.getCommentGenerator().addComment(answer);
+      //  context.getCommentGenerator().addComment(answer);
         answer.addAttribute(new Attribute("id", "findBySelective"));
         FullyQualifiedJavaType resultType;
         resultType = introspectedTable.getRules().calculateAllFieldsClass();

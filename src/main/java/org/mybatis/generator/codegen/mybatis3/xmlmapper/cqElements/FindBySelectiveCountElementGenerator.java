@@ -37,7 +37,7 @@ public class FindBySelectiveCountElementGenerator extends
     @Override
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
-        context.getCommentGenerator().addComment(answer);
+        /*context.getCommentGenerator().addComment(answer);*/
         answer.addAttribute(new Attribute("id", "findBySelective_COUNT"));
         FullyQualifiedJavaType resultType;
         resultType = introspectedTable.getRules().calculateAllFieldsClass();

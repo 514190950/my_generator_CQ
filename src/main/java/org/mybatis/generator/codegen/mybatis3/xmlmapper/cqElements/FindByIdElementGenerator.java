@@ -44,7 +44,7 @@ public class FindByIdElementGenerator extends
         answer.addAttribute(new Attribute("id", //$NON-NLS-1$
                 "findById"));
 
-        context.getCommentGenerator().addComment(answer);
+       /* context.getCommentGenerator().addComment(answer);*/
         FullyQualifiedJavaType resultType;
 
         resultType = introspectedTable.getRules().calculateAllFieldsClass();
