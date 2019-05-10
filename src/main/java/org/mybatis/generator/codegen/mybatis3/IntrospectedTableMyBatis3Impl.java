@@ -32,6 +32,7 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerato
 import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
 import org.mybatis.generator.codegen.mybatis3.javaservice.CQMngService.MngServiceGenerator;
+import org.mybatis.generator.codegen.mybatis3.javaservice.CQcommonService.CommonServiceGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.*;
 import org.mybatis.generator.codegen.mybatis3.model.CQmodel.ControllerGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.CQmodel.InputModelGenerator;
@@ -137,11 +138,11 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
      */
     protected void calculateJavaModelGenerators(List<String> warnings, ProgressCallback progressCallback) {
         Rules rules = getRules();
-       /* if (getRules().generateExampleClass()) {
+        if (getRules().generateExampleClass()) {
             AbstractJavaGenerator javaGenerator = new ExampleGenerator();
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
-        }*/
+        }
 
         if (getRules().generatePrimaryKeyClass()) {
             AbstractJavaGenerator javaGenerator = new PrimaryKeyGenerator();
@@ -182,6 +183,12 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
         //添加MngService
         if(true){
             AbstractJavaGenerator javaGenerator = new MngServiceGenerator();
+            initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+            javaModelGenerators.add(javaGenerator);
+        }
+        //添加CommonService
+        if(true){
+            AbstractJavaGenerator javaGenerator = new CommonServiceGenerator();
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }

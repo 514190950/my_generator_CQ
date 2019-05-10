@@ -189,7 +189,7 @@ public class ControllerGenerator extends AbstractJavaGenerator {
 
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.addAnnotation("@Value(value = \"core/assess_basic_info\")");
+        method.addAnnotation("@Value(value = \"core/"+ introspectedTable.getFullyQualifiedTable().toString()+"\")");
         method.setName("setMainView");
         method.addParameter(new Parameter(new FullyQualifiedJavaType("java.lang.String"),"mainView"));
         StringBuilder sb = new StringBuilder();
