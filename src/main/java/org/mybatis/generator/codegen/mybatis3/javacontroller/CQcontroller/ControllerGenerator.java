@@ -22,6 +22,11 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  */
 public class ControllerGenerator extends AbstractJavaGenerator {
 
+    private static final String[] IMPORT_ARRAY = new String[]{"org.springframework.beans.factory.annotation.Value","org.springframework.stereotype.Controller"
+            ,"org.springframework.web.bind.annotation.RequestMapping","com.wondersgroup.healthins.cms.base.controller.CmsBaseController",
+            "com.wondersgroup.healthins.plugin.api.dto.ResultDto","com.wondersgroup.healthins.plugin.api.dtoutil.ValidResult",
+            "com.wondersgroup.healthins.plugin.api.dtoutil.ValidUtils"};
+
     public ControllerGenerator() {
         super();
     }
@@ -35,6 +40,9 @@ public class ControllerGenerator extends AbstractJavaGenerator {
         //获取实体类包的地址
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getMyBatis3ControllerType());
         TopLevelClass topLevelClass = new TopLevelClass(type);
+        for (String s : IMPORT_ARRAY) {
+            topLevelClass.addImportedType(s);
+        }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.setSuperClass("CmsBaseController<"+introspectedTable.getMyBatis3ModelQueryFileName()
         +","+introspectedTable.getMyBatis3ModelQueryFileName()+","+introspectedTable.getMyBatis3ModelInputFileName()+">");

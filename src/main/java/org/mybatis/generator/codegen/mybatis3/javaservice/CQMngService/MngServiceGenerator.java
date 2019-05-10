@@ -23,8 +23,7 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
 public class MngServiceGenerator extends AbstractJavaGenerator {
     private static final String[] IMPORT_ARRAY = new String[]{"java.util.Date","org.springframework.beans.BeanUtils",
     "org.springframework.stereotype.Service","com.wondersgroup.healthins.cms.base.CmsBaseServiceImpl","com.wondersgroup.healthins.plugin.api.dto.ResultDto",
-            "com.wondersgroup.healthins.plugin.db.pager.Pager","com.wondersgroup.ltcins.intact.core.dto.rsp.ResultDTO",
-    };
+            "com.wondersgroup.healthins.plugin.db.pager.Pager","com.wondersgroup.ltcins.intact.core.dto.rsp.ResultDTO"};
      String   COMMON_SERVICE_NAME = "assessQuestionPicCommonService";
 
     public MngServiceGenerator() {
@@ -44,8 +43,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
             topLevelClass.addImportedType(s);
         }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.setSuperClass("CmsBaseController<"+introspectedTable.getMyBatis3ModelQueryFileName()
-                +","+introspectedTable.getMyBatis3ModelQueryFileName()+","+introspectedTable.getMyBatis3ModelInputFileName()+">");
+        topLevelClass.setSuperClass("CmsBaseServiceImpl<"+introspectedTable.getMyBatis3ModelQueryFileName()+","+introspectedTable.getMyBatis3ModelInputFileName()+">");
         topLevelClass.addAnnotation("@Service");
         commentGenerator.addJavaFileComment(topLevelClass);
 
