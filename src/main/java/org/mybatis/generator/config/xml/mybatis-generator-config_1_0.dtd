@@ -49,7 +49,7 @@
   tables.
 -->
 <!ELEMENT context (property*, plugin*, commentGenerator?, jdbcConnection, javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?,controllerGenerator?,table+)>
+                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?,controllerGenerator?,mngServiceGenerator?,commonServiceGenerator?,table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
@@ -138,6 +138,20 @@
 <!--添加controller的约束  auth:gxz-->
 <!ELEMENT controllerGenerator (property*)>
 <!ATTLIST controllerGenerator
+targetPackage CDATA #REQUIRED
+targetProject CDATA #REQUIRED
+作者:gxz CDATA #IMPLIED>
+
+<!--添加mngService的约束  auth:gxz-->
+<!ELEMENT mngServiceGenerator (property*)>
+<!ATTLIST mngServiceGenerator
+targetPackage CDATA #REQUIRED
+targetProject CDATA #REQUIRED
+作者:gxz CDATA #IMPLIED>
+
+<!--添加commonService的约束  auth:gxz-->
+<!ELEMENT commonServiceGenerator (property*)>
+<!ATTLIST commonServiceGenerator
 targetPackage CDATA #REQUIRED
 targetProject CDATA #REQUIRED
 作者:gxz CDATA #IMPLIED>

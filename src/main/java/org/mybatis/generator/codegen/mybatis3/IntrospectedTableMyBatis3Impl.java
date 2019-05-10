@@ -31,7 +31,9 @@ import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
+import org.mybatis.generator.codegen.mybatis3.javaservice.CQMngService.MngServiceGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.*;
+import org.mybatis.generator.codegen.mybatis3.model.CQmodel.ControllerGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.CQmodel.InputModelGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.CQmodel.QueryModelGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
@@ -171,10 +173,23 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }
+        //添加controller
+        if(true){
+            AbstractJavaGenerator javaGenerator = new ControllerGenerator();
+            initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+            javaModelGenerators.add(javaGenerator);
+        }
+        //添加MngService
+        if(true){
+            AbstractJavaGenerator javaGenerator = new MngServiceGenerator();
+            initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+            javaModelGenerators.add(javaGenerator);
+        }
 
     }
 
-    protected void initializeAbstractGenerator(AbstractGenerator abstractGenerator, List<String> warnings, ProgressCallback progressCallback) {
+    protected void
+    initializeAbstractGenerator(AbstractGenerator abstractGenerator, List<String> warnings, ProgressCallback progressCallback) {
         if (abstractGenerator == null) {
             return;
         }

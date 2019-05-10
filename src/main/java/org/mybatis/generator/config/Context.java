@@ -37,6 +37,8 @@ import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.api.XmlFormatter;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.codegen.mybatis3.javaservice.CQMngService.MngServiceGenerator;
+import org.mybatis.generator.codegen.mybatis3.javaservice.CQcommonService.CommonServiceGenerator;
 import org.mybatis.generator.internal.ObjectFactory;
 import org.mybatis.generator.internal.PluginAggregator;
 import org.mybatis.generator.internal.db.ConnectionFactory;
@@ -85,6 +87,10 @@ public class Context extends PropertyHolder {
     private XmlFormatter xmlFormatter;
     //controller
     private ControllerGeneratorConfiguration controllerGeneratorConfiguration;
+    //controller
+    private MngServiceGeneratorConfiguration mngServiceGeneratorConfiguration;
+    //controller
+    private CommonServiceGeneratorConfiguration commonServiceGeneratorConfiguration;
 
     /**
      * Constructs a Context object.
@@ -123,6 +129,22 @@ public class Context extends PropertyHolder {
 
     public JavaClientGeneratorConfiguration getJavaClientGeneratorConfiguration() {
         return javaClientGeneratorConfiguration;
+    }
+
+    public MngServiceGeneratorConfiguration getMngServiceGeneratorConfiguration() {
+        return mngServiceGeneratorConfiguration;
+    }
+
+    public void setMngServiceGeneratorConfiguration(MngServiceGeneratorConfiguration mngServiceGeneratorConfiguration) {
+        this.mngServiceGeneratorConfiguration = mngServiceGeneratorConfiguration;
+    }
+
+    public CommonServiceGeneratorConfiguration getCommonServiceGeneratorConfiguration() {
+        return commonServiceGeneratorConfiguration;
+    }
+
+    public void setCommonServiceGeneratorConfiguration(CommonServiceGeneratorConfiguration commonServiceGeneratorConfiguration) {
+        this.commonServiceGeneratorConfiguration = commonServiceGeneratorConfiguration;
     }
 
     public JavaModelGeneratorConfiguration getJavaModelGeneratorConfiguration() {

@@ -26,15 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.GeneratedKey;
-import org.mybatis.generator.config.JavaClientGeneratorConfiguration;
-import org.mybatis.generator.config.JavaModelGeneratorConfiguration;
-import org.mybatis.generator.config.ModelType;
-import org.mybatis.generator.config.PropertyHolder;
-import org.mybatis.generator.config.PropertyRegistry;
-import org.mybatis.generator.config.SqlMapGeneratorConfiguration;
-import org.mybatis.generator.config.TableConfiguration;
+import org.mybatis.generator.config.*;
 import org.mybatis.generator.internal.rules.ConditionalModelRules;
 import org.mybatis.generator.internal.rules.FlatModelRules;
 import org.mybatis.generator.internal.rules.HierarchicalModelRules;
@@ -65,9 +57,24 @@ public abstract class IntrospectedTable {
         ATTR_IBATIS2_SQL_MAP_NAMESPACE,
         ATTR_MYBATIS3_XML_MAPPER_PACKAGE,
         ATTR_MYBATIS3_XML_MAPPER_FILE_NAME,
+        //长护险MVC内容
+        ATTR_MYBATIS3_CONTROLLER_PACKAGE,
+        ATTR_MYBATIS3_CONTROLLER_FILE_NAME,
+        ATTR_MYBATIS3_CONTROLLER_TYPE,
+        ATTR_MYBATIS3_MNG_SERVICE_PACKAGE,
+        ATTR_MYBATIS3_MNG_SERVICE_FILE_NAME,
+        ATTR_MYBATIS3_MNG_SERVICE_TYPE,
+        ATTR_MYBATIS3_COMMON_SERVICE_PACKAGE,
+        ATTR_MYBATIS3_COMMON_SERVICE_FILE_NAME,
+        ATTR_MYBATIS3_COMMON_SERVICE_TYPE,
+
+
         //添加重庆长护险两个实体类
-        ATTR_MODEL_QUERY,
-        ATTR_MODEL_INPUT,
+        ATTR_MODEL_QUERY_TYPE,
+        ATTR_MODEL_INPUT_TYPE,
+        ATTR_MODEL_QUERY_FILE_NAME,
+        ATTR_MODEL_INPUT_FILE_NAME,
+
         /** also used as XML Mapper namespace if a Java mapper is generated */
         ATTR_MYBATIS3_JAVA_MAPPER_TYPE,
         /** used as XML Mapper namespace if no client is generated */
@@ -350,11 +357,11 @@ public abstract class IntrospectedTable {
         return internalAttributes.get(InternalAttribute.ATTR_BASE_RECORD_TYPE);
     }
     public String getModelQueryType() {
-        return internalAttributes.get(InternalAttribute.ATTR_MODEL_QUERY);
+        return internalAttributes.get(InternalAttribute.ATTR_MODEL_QUERY_TYPE);
     }
 
     public String getModelInputType() {
-        return internalAttributes.get(InternalAttribute.ATTR_MODEL_INPUT);
+        return internalAttributes.get(InternalAttribute.ATTR_MODEL_INPUT_TYPE);
     }
 
     /**
@@ -522,7 +529,11 @@ public abstract class IntrospectedTable {
 
         setIbatis2SqlMapNamespace(calculateIbatis2SqlMapNamespace());
         setMyBatis3FallbackSqlMapNamespace(calculateMyBatis3FallbackSqlMapNamespace());
-        
+
+        setMyBatis3ControllerFileName(calculateMyBatis3ControllerFileName());
+        setMyBatis3ModelQueryFileName(calculateMyBatis3ModelQueryFileName());
+        setMyBatis3ModelInputFileName(calculateMyBatis3ModelInputFileName());
+
         setSqlMapFullyQualifiedRuntimeTableName(calculateSqlMapFullyQualifiedRuntimeTableName());
         setSqlMapAliasedFullyQualifiedRuntimeTableName(calculateSqlMapAliasedFullyQualifiedRuntimeTableName());
 
@@ -789,7 +800,14 @@ public abstract class IntrospectedTable {
     private boolean isSubPackagesEnabled(PropertyHolder propertyHolder) {
         return isTrue(propertyHolder.getProperty(PropertyRegistry.ANY_ENABLE_SUB_PACKAGES));
     }
-
+/**
+ * 功能描述:获取mvc工具类的包路径
+ * javaClientGenerator标签中的targetPackage
+ * @auther: gxz
+ * @param:
+ * @return:
+ * @date: 2019/5/10 11:45
+ */
     protected String calculateJavaClientInterfacePackage() {
         JavaClientGeneratorConfiguration config = context
                 .getJavaClientGeneratorConfiguration();
@@ -804,6 +822,76 @@ public abstract class IntrospectedTable {
 
         return sb.toString();
     }
+    /**
+     * 功能描述:获取controller的包路径
+     *
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/10 11:45
+     */
+    protected String calculateControllerInterfacePackage() {
+        ControllerGeneratorConfiguration config = context
+                .getControllerGeneratorConfiguration();
+        if (config == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(config.getTargetPackage());
+
+        sb.append(fullyQualifiedTable.getSubPackage(isSubPackagesEnabled(config)));
+
+        return sb.toString();
+    }
+
+    /**
+     * 功能描述:获取MngService的包路径
+     *
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/10 11:45
+     */
+    protected String calculateMngServiceInterfacePackage() {
+        MngServiceGeneratorConfiguration config = context
+                .getMngServiceGeneratorConfiguration();
+        if (config == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(config.getTargetPackage());
+
+        sb.append(fullyQualifiedTable.getSubPackage(isSubPackagesEnabled(config)));
+
+        return sb.toString();
+    }
+
+    /**
+     * 功能描述:获取commonService的包路径
+     *
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/10 11:45
+     */
+    protected String calculateCommonServiceInterfacePackage() {
+        CommonServiceGeneratorConfiguration config = context
+                .getCommonServiceGeneratorConfiguration();
+        if (config == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(config.getTargetPackage());
+
+        sb.append(fullyQualifiedTable.getSubPackage(isSubPackagesEnabled(config)));
+
+        return sb.toString();
+    }
+
+
 /**
  * 功能描述:DAO层创建
  * @auther: gxz
@@ -843,6 +931,33 @@ public abstract class IntrospectedTable {
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append("SqlProvider"); //$NON-NLS-1$
         setMyBatis3SqlProviderType(sb.toString());
+
+        sb.setLength(0);
+        sb.append(calculateControllerInterfacePackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("MngController"); //$NON-NLS-1$
+        setMyBatis3ControllerType(sb.toString());
+
+        sb.setLength(0);
+        sb.append(calculateMngServiceInterfacePackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("MngService"); //$NON-NLS-1$
+        setMyBatis3MngServiceType(sb.toString());
+
+        sb.setLength(0);
+        sb.append(calculateCommonServiceInterfacePackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("CommonService"); //$NON-NLS-1$
+        setMyBatis3CommonServiceType(sb.toString());
+
+
+
+
+
+
     }
 
     protected String calculateJavaModelPackage() {
@@ -931,11 +1046,49 @@ public abstract class IntrospectedTable {
         StringBuilder sb = new StringBuilder();
         /*sb.append(fullyQualifiedTable.getDomainObjectName());*/
         //注掉的是下划线转驼峰的方法  改成使用下划线格式
-        sb.append(fullyQualifiedTable);
+        sb.append(fullyQualifiedTable.getIntrospectedTableName());
         sb.append(".xml"); //$NON-NLS-1$
 
         return sb.toString();
     }
+    /**
+     * 功能描述:根据重庆项目修改结尾
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/7 15:10
+     */
+    protected String calculateMyBatis3ControllerFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("MngController"); //$NON-NLS-1$
+        return sb.toString();
+    }
+    /**
+     * 功能描述:query名称
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/7 15:10
+     */
+    protected String calculateMyBatis3ModelQueryFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getDomainObjectQueryName());
+        return sb.toString();
+    }
+    /**
+     * 功能描述:input名称
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/7 15:10
+     */
+    protected String calculateMyBatis3ModelInputFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getDomainObjectInputName());
+        return sb.toString();
+    }
+
 
     protected String calculateIbatis2SqlMapNamespace() {
         return fullyQualifiedTable.getIbatis2SqlMapNamespace();
@@ -1055,11 +1208,11 @@ public abstract class IntrospectedTable {
                 baseRecordType);
     }
     public void setModelQueryType(String modelQueryType) {
-        internalAttributes.put(InternalAttribute.ATTR_MODEL_QUERY,
+        internalAttributes.put(InternalAttribute.ATTR_MODEL_QUERY_TYPE,
                 modelQueryType);
     }
     public void setModelInputType(String modelInputType) {
-        internalAttributes.put(InternalAttribute.ATTR_MODEL_INPUT,
+        internalAttributes.put(InternalAttribute.ATTR_MODEL_INPUT_TYPE,
                 modelInputType);
     }
 
@@ -1121,6 +1274,23 @@ public abstract class IntrospectedTable {
                 InternalAttribute.ATTR_MYBATIS3_XML_MAPPER_PACKAGE,
                 mybatis3XmlMapperPackage);
     }
+    public void setMyBatis3ModelQueryFileName(String myBatis3ModelQueryFileName ){
+        internalAttributes.put(
+                InternalAttribute.ATTR_MODEL_QUERY_FILE_NAME,
+                myBatis3ModelQueryFileName);
+    }
+    public void setMyBatis3ModelInputFileName(String myBatis3ModelInputFileName ){
+        internalAttributes.put(
+                InternalAttribute.ATTR_MODEL_INPUT_FILE_NAME,
+                myBatis3ModelInputFileName);
+    }
+    public String getMyBatis3ModelQueryFileName(){
+     return    internalAttributes.get(
+                InternalAttribute.ATTR_MODEL_QUERY_FILE_NAME);
+    }
+    public String getMyBatis3ModelInputFileName(){
+        return  internalAttributes.get(InternalAttribute.ATTR_MODEL_INPUT_FILE_NAME);
+    }
 
     public String getMyBatis3XmlMapperFileName() {
         return internalAttributes
@@ -1142,6 +1312,42 @@ public abstract class IntrospectedTable {
         internalAttributes.put(
                 InternalAttribute.ATTR_MYBATIS3_JAVA_MAPPER_TYPE,
                 mybatis3JavaMapperType);
+    }
+    public void setMyBatis3ControllerType(String myBatis3ControllerType) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_CONTROLLER_TYPE,
+                myBatis3ControllerType);
+    }
+    public String getMyBatis3ControllerType() {
+       return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_CONTROLLER_TYPE);
+    }
+    public void setMyBatis3MngServiceType(String myBatis3MngServiceType) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_MNG_SERVICE_TYPE,
+                myBatis3MngServiceType);
+    }
+    public String getMyBatis3MngServiceType() {
+        return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_MNG_SERVICE_TYPE);
+    }
+    public void setMyBatis3CommonServiceType(String myBatis3CommonServiceType) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_TYPE,
+                myBatis3CommonServiceType);
+    }
+    public String getMyBatis3CommonServiceType() {
+        return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_TYPE);
+    }
+    public void setMyBatis3ControllerFileName(String myBatis3ControllerName) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_CONTROLLER_FILE_NAME,
+                myBatis3ControllerName);
+    }
+    public String getMyBatis3ControllerFileName() {
+        return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_CONTROLLER_FILE_NAME);
     }
 
     public String getMyBatis3SqlProviderType() {

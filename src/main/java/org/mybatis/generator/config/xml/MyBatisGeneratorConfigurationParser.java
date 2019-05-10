@@ -168,6 +168,11 @@ public class MyBatisGeneratorConfigurationParser {
                 parseTable(context, childNode);
             } else if ("controllerGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseControllerGenerator(context, childNode);
+            }else if ("mngServiceGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseMngServiceGenerator(context, childNode);
+            }
+            else if ("commonServiceGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseCommonServiceGenerator(context, childNode);
             }
         }
     }
@@ -218,6 +223,54 @@ public class MyBatisGeneratorConfigurationParser {
 
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(sqlMapGeneratorConfiguration, childNode);
+            }
+        }
+    }
+    private void parseMngServiceGenerator(Context context, Node node) {
+        MngServiceGeneratorConfiguration mngServiceGeneratorConfiguration = new MngServiceGeneratorConfiguration();
+        context.setMngServiceGeneratorConfiguration(mngServiceGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        mngServiceGeneratorConfiguration.setTargetPackage(targetPackage);
+        mngServiceGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(mngServiceGeneratorConfiguration, childNode);
+            }
+        }
+    }
+    private void parseCommonServiceGenerator(Context context, Node node) {
+        CommonServiceGeneratorConfiguration commonServiceGeneratorConfiguration = new CommonServiceGeneratorConfiguration();
+        context.setCommonServiceGeneratorConfiguration(commonServiceGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        commonServiceGeneratorConfiguration.setTargetPackage(targetPackage);
+        commonServiceGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(commonServiceGeneratorConfiguration, childNode);
             }
         }
     }

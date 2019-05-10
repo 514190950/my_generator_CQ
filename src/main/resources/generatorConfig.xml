@@ -57,11 +57,24 @@
             <property name="enableSubPackages" value="true" />
         </controllerGenerator>
 
+        <!-- 生成mngService的包名和位置，这里配置将生成的dao类放在com.qlm.service这个包下 -->
+        <mngServiceGenerator targetPackage="com.qlm.service"
+                             targetProject="./src"   >
+            <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
+            <property name="enableSubPackages" value="true" />
+        </mngServiceGenerator>
+        <!-- 生成commonService的包名和位置，这里配置将生成的dao类放在com.qlm.service这个包下 -->
+        <commonServiceGenerator targetPackage="com.qlm.commonService"
+                             targetProject="./src"   >
+            <!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
+            <property name="enableSubPackages" value="true" />
+        </commonServiceGenerator>
+
         <!-- 配置表信息 -->
         <!-- schema即为数据库名 tableName为对应的数据库表 domainObjectName是要生成的实体类 enable*ByExample
                 是否生成 example类   -->
         <!-- 更改tableName和domainObjectName就可以 -->
-        <table  tableName="login_user" domainObjectName="大傻逼" domainObjectQueryName="二傻逼" domainObjectInputName="三傻逼" ></table>
+        <table  tableName="login_user" domainObjectName="LoginUser" domainObjectQueryName="LoginUserMngQuery" domainObjectInputName="LoginUserMngInput" ></table>
         <table  tableName="role_menu"></table>
     </context>
 </generatorConfiguration>
