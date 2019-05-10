@@ -1,0 +1,20 @@
+修改dtd约束文件 添加标签内容
+MyBatisGeneratorConfigurationParser类中修改parseTable添加解析配置
+TableConfiguration类中添加方法和属性
+做完之后table核心类可以获得属性
+
+Rules接口中添加方法
+ConditionalModelRules实现类中增加多余两个实体类的方法
+
+IntrospectedTableMyBatis3Impl中calculateJavaModelGenerators方法添加自定义内容
+并创建一整套接受规则
+
+IntrospectedTable中InternalAttribute添加实体类枚举
+get set 方法并将calculateModelAttributes方法中添加相应内容
+
+FullyQualifiedTable添加属性 并给get set方法  修改构造方法
+
+
+AbstractJavaGenerator中添加方法  这之中是定义各种规则的  如属性规则  方法规则
+
+Context中添加controller属性 并增加controllerGeneratorConfiguration类
