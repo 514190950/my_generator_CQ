@@ -1,0 +1,23 @@
+此工具是基于mybatis_generator改编的重庆长护险定制版逆向工程
+
+使用方法:
+1.配置jdbc.properties文件
+2.配置generatorConfig.xml文件
+3.在main方法中执行
+============================================
+配置细节 (generatorConfig.xml):
+<classPathEntry>标签中的 location属性  需要配置连接包的地址(已经写好 如果无效需要手动进行配置 写绝对路径,一般不会动)
+
+<javaModelGenerator>          实体类包
+<sqlMapGenerator>             mybatis的sql xml 包
+<javaClientGenerator>         启动标签  必须填！ 内容可随意  不用改即可
+<controllerGenerator>         controller 包
+<mngServiceGenerator>         mngService 包
+<commonServiceGenerator>      commonService 包
+<daoGenerator>                dao包
+
+<table> ：
+             tableName属性 ----指定数据库表名
+             domainObjectName属性  -------表所对应的实体类名称
+             domainObjectQueryName -------所对应的query实体类名称
+             domainObjectInputName -------所对应的input实体类名称
