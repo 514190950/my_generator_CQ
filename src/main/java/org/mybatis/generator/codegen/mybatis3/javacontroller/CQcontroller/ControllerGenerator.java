@@ -8,6 +8,8 @@ import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.RootClassInfo;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  * @date:
  */
 public class ControllerGenerator extends AbstractJavaGenerator {
+    private Log logger = LogFactory.getLog(this.getClass());
 
     private static final String[] IMPORT_ARRAY = new String[]{"org.springframework.beans.factory.annotation.Value","org.springframework.stereotype.Controller"
             ,"org.springframework.web.bind.annotation.RequestMapping","com.wondersgroup.healthins.cms.base.controller.CmsBaseController",
@@ -33,6 +36,7 @@ public class ControllerGenerator extends AbstractJavaGenerator {
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
+        logger.error("开始生成"+introspectedTable.getFullyQualifiedTable()+" controller实体类");
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(getString(
                 "Progress.8", table.toString())); //$NON-NLS-1$
@@ -40,15 +44,22 @@ public class ControllerGenerator extends AbstractJavaGenerator {
         //获取实体类包的地址
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getMyBatis3ControllerType());
         TopLevelClass topLevelClass = new TopLevelClass(type);
-        for (String s : IMPORT_ARRAY) {
-            topLevelClass.addImportedType(s);
+        for (String importType : IMPORT_ARRAY) {
+            topLevelClass.addImportedType(importType);
         }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.setSuperClass("CmsBaseController<"+introspectedTable.getMyBatis3ModelQueryFileName()
+        topLevelClass.setSuperClass("CmsBaseController<"+introspectedTable.getMyBatis3MngServiceFileName()
         +","+introspectedTable.getMyBatis3ModelQueryFileName()+","+introspectedTable.getMyBatis3ModelInputFileName()+">");
         topLevelClass.addAnnotation("@Controller");
         topLevelClass.addAnnotation("@RequestMapping(value = \"/core/"+table.toString()+".htm\")");
         commentGenerator.addJavaFileComment(topLevelClass);
+
+        Field field=new Field();
+        field.setName(formatTypeNameToParamName(introspectedTable.getMyBatis3MngServiceFileName()));
+        field.setType(new FullyQualifiedJavaType(introspectedTable.getMyBatis3CommonServiceType()));
+        field.addAnnotation("@Resource");
+        field.setVisibility(JavaVisibility.PRIVATE);
+        topLevelClass.addField(field);
 
         FullyQualifiedJavaType superClass = getSuperClass();
         if (superClass != null) {
@@ -175,9 +186,9 @@ public class ControllerGenerator extends AbstractJavaGenerator {
 
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
-        method.addAnnotation("@Resource");
+        method.addAnnotation("@Override");
         method.setName("setService");
-        method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getMyBatis3ModelQueryFileName()),introspectedTable.getMyBatis3ModelQueryFileName()));
+        method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getMyBatis3MngServiceType()),"cmsService"));
         StringBuilder sb = new StringBuilder();
         sb.append("this.cmsService = cmsService; "); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
@@ -229,6 +240,20 @@ public class ControllerGenerator extends AbstractJavaGenerator {
         if(typeName==null)return null;
          String first=typeName.substring(0,1);
          return first+typeName.substring(1).toLowerCase();
+
+    }
+    /**
+     * 功能描述:把类名首字母小写
+     * 例:StringBuff--> stringBuff
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/10 13:38
+     */
+    private String formatTypeNameToParamName(String typeName){
+        if(typeName==null)return null;
+        String first=typeName.substring(0,1);
+        return first.toLowerCase()+typeName.substring(1);
 
     }
 

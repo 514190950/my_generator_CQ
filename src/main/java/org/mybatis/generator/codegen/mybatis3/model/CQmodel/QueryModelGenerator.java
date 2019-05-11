@@ -18,6 +18,8 @@ import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.RootClassInfo;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
 /**
  * 功能描述:长护险Query实体类创建模板
@@ -25,6 +27,7 @@ import org.mybatis.generator.codegen.RootClassInfo;
  * @date:
  */
 public class QueryModelGenerator extends AbstractJavaGenerator {
+    private Log logger = LogFactory.getLog(this.getClass());
 
     public QueryModelGenerator() {
         super();
@@ -33,6 +36,7 @@ public class QueryModelGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        logger.error("开始生成"+table+"  query实体类");
         progressCallback.startTask(getString(
                 "Progress.8", table.toString())); //$NON-NLS-1$
         Plugin plugins = context.getPlugins();
@@ -42,6 +46,7 @@ public class QueryModelGenerator extends AbstractJavaGenerator {
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.setSuperClass("CmsBaseQuery");
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.wondersgroup.healthins.cms.base.dto.CmsBaseQuery"));
         commentGenerator.addJavaFileComment(topLevelClass);
 
         FullyQualifiedJavaType superClass = getSuperClass();

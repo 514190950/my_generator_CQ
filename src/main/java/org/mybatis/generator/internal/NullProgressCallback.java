@@ -16,6 +16,8 @@
 package org.mybatis.generator.internal;
 
 import org.mybatis.generator.api.ProgressCallback;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
 /**
  * This class implements a progress callback that does nothing. It is used when
@@ -24,7 +26,7 @@ import org.mybatis.generator.api.ProgressCallback;
  * @author Jeff Butler
  */
 public class NullProgressCallback implements ProgressCallback {
-
+    private Log logger = LogFactory.getLog(this.getClass());
     /**
      * 
      */
@@ -48,5 +50,7 @@ public class NullProgressCallback implements ProgressCallback {
     }
 
     public void done() {
+        logger.error("生成完毕    此工具是重庆长护险定制版生成工具  ");
+        logger.error("作者:gxz 如有问题联系QQ: 514190950");
     }
 }

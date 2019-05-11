@@ -45,16 +45,19 @@ import org.mybatis.generator.codegen.mybatis3.javamapper.elements.UpdateByPrimar
 import org.mybatis.generator.codegen.mybatis3.javamapper.elements.UpdateByPrimaryKeyWithoutBLOBsMethodGenerator;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.XMLMapperGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
-/**
- * @author Jeff Butler
+/**commonService生成模板
+ * @author gxz
  *
  */
 public class CommonServiceGenerator extends AbstractJavaClientGenerator {
 
-    /**
-     *
-     */
+    private Log logger = LogFactory.getLog(this.getClass());
+
+    private static final String[] IMPORT_ARRAY = new String[]{};
+
     public CommonServiceGenerator() {
         super(true);
     }
@@ -65,6 +68,7 @@ public class CommonServiceGenerator extends AbstractJavaClientGenerator {
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
+        logger.error("开始生成"+introspectedTable.getFullyQualifiedTable()+" commonService");
         progressCallback.startTask(getString("Progress.17", //$NON-NLS-1$
                 introspectedTable.getFullyQualifiedTable().toString()));
         CommentGenerator commentGenerator = context.getCommentGenerator();
@@ -90,7 +94,10 @@ public class CommonServiceGenerator extends AbstractJavaClientGenerator {
         }
         FullyQualifiedJavaType baseCommonServiceType = new FullyQualifiedJavaType("com.wondersgroup.ltcins.intact.core.service.base.BaseCommonService<"+introspectedTable.getFullyQualifiedTable().getDomainObjectName()+","+introspectedTable.getFullyQualifiedTable().getDomainObjectName()+">");
         interfaze.addSuperInterface(baseCommonServiceType);
-        interfaze.addImportedType(baseCommonServiceType);
+        for (String importType : IMPORT_ARRAY) {
+            interfaze.addImportedType(new FullyQualifiedJavaType(importType));
+        }
+        interfaze.addImportedType(new FullyQualifiedJavaType("com.wondersgroup.ltcins.intact.core.model."+introspectedTable.getFullyQualifiedTable().getDomainObjectName()));
 
 
         List<CompilationUnit> answer = new ArrayList<CompilationUnit>();

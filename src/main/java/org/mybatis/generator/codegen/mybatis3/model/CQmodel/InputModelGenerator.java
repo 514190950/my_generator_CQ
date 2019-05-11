@@ -8,6 +8,8 @@ import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.RootClassInfo;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,8 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  */
 public class InputModelGenerator extends AbstractJavaGenerator {
 
+    private Log logger = LogFactory.getLog(this.getClass());
+
     public InputModelGenerator() {
         super();
     }
@@ -28,6 +32,7 @@ public class InputModelGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        logger.error("开始生成"+table+" input实体类");
         progressCallback.startTask(getString(
                 "Progress.8", table.toString())); //$NON-NLS-1$
         Plugin plugins = context.getPlugins();
@@ -38,7 +43,8 @@ public class InputModelGenerator extends AbstractJavaGenerator {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.setSuperClass("CmsBaseInput");
         commentGenerator.addJavaFileComment(topLevelClass);
-
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.wondersgroup.healthins.plugin.api.dtoutil.InputType"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.wondersgroup.healthins.plugin.api.dtoutil.InputValid"));
         FullyQualifiedJavaType superClass = getSuperClass();
         if (superClass != null) {
             topLevelClass.setSuperClass(superClass);
@@ -64,7 +70,6 @@ public class InputModelGenerator extends AbstractJavaGenerator {
 
             Field field = getJavaBeansInputField(introspectedColumn);
             if (plugins.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable, Plugin.ModelClassType.BASE_RECORD)) {
-                System.out.println(1);
                 topLevelClass.addField(field);
                 topLevelClass.addImportedType(field.getType());
             }

@@ -1,4 +1,4 @@
-package org.mybatis.generator.codegen.mybatis3.javaservice.CQcommonService.CQcommonServiceImpl;
+package org.mybatis.generator.codegen.mybatis3.javamapper.CqDAO;
 
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.FullyQualifiedTable;
@@ -6,8 +6,6 @@ import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.Plugin;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
-import org.mybatis.generator.logging.Log;
-import org.mybatis.generator.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,35 +17,27 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  * @auther: gxz
  * @date:
  */
-public class CommonServiceImplGenerator extends AbstractJavaGenerator {
+public class DaoGenerator extends AbstractJavaGenerator {
+    private static final String[] IMPORT_ARRAY = new String[]{"org.springframework.stereotype.Repository",
+    "com.wondersgroup.ltcins.intact.core.dao"};
 
-    private Log logger = LogFactory.getLog(this.getClass());
-
-    private static final String[] IMPORT_ARRAY = new String[]{"javax.annotation.Resource",
-    "org.springframework.stereotype.Component","com.alibaba.dubbo.config.annotation.Service",
-    "com.wondersgroup.ltcins.intact.core.provider.service.base.BaseCommonServiceImpl"};
-
-    public CommonServiceImplGenerator() {
+    public DaoGenerator() {
         super();
     }
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
-        logger.error("开始生成"+introspectedTable.getFullyQualifiedTable()+"  commonServiceImpl");
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
         progressCallback.startTask(getString(
                 "Progress.8", table.toString())); //$NON-NLS-1$
         Plugin plugins = context.getPlugins();
         CommentGenerator commentGenerator = context.getCommentGenerator();
         //获取实体类包的地址
-        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getMyBatis3CommonServiceImplType());
+        FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getMyBatis3DaoType());
         TopLevelClass topLevelClass = new TopLevelClass(type);
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.setSuperClass("BaseCommonServiceImpl<"+introspectedTable.getMyBatis3DaoType()
-        +","+introspectedTable.getBaseRecordType()+","+introspectedTable.getBaseRecordType()+">");
-        topLevelClass.addAnnotation("@Component");
-        topLevelClass.addAnnotation("@Service");
-        topLevelClass.addSuperInterface(new FullyQualifiedJavaType(introspectedTable.getMyBatis3CommonServiceType()));
+        topLevelClass.setSuperClass("LtcInsCoreBaseDAO<"+introspectedTable.getBaseRecordType()+","+introspectedTable.getPrimaryKeyType()+">");
+        topLevelClass.addAnnotation("@Repository");
         commentGenerator.addJavaFileComment(topLevelClass);
         for (String importType : IMPORT_ARRAY) {
             topLevelClass.addImportedType(importType);
@@ -57,8 +47,6 @@ public class CommonServiceImplGenerator extends AbstractJavaGenerator {
             topLevelClass.setSuperClass(superClass);
             topLevelClass.addImportedType(superClass);
         }
-        Method setService = getSetDao();
-        topLevelClass.addMethod(setService);
 
         if (introspectedTable.isConstructorBased()) {
             addParameterizedConstructor(topLevelClass);
@@ -176,7 +164,7 @@ public class CommonServiceImplGenerator extends AbstractJavaGenerator {
         method.addAnnotation("@Resource");
         method.addAnnotation("@Override");
         method.setName("setService");
-        method.addParameter(new Parameter(new FullyQualifiedJavaType(introspectedTable.getMyBatis3DaoType()),"dao"));
+        method.addParameter(new Parameter(new FullyQualifiedJavaType("得改"),"dao"));
         StringBuilder sb = new StringBuilder();
         sb.append("this.dao = dao; "); //$NON-NLS-1$
         method.addBodyLine(sb.toString());

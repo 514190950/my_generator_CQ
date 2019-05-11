@@ -29,9 +29,11 @@ import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.CqDAO.DaoGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
 import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
 import org.mybatis.generator.codegen.mybatis3.javaservice.CQMngService.MngServiceGenerator;
+import org.mybatis.generator.codegen.mybatis3.javaservice.CQcommonService.CQcommonServiceImpl.CommonServiceImplGenerator;
 import org.mybatis.generator.codegen.mybatis3.javaservice.CQcommonService.CommonServiceGenerator;
 import org.mybatis.generator.codegen.mybatis3.model.*;
 import org.mybatis.generator.codegen.mybatis3.model.CQmodel.ControllerGenerator;
@@ -114,12 +116,14 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
         AbstractJavaClientGenerator javaGenerator;
         if ("XMLMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
             javaGenerator = new JavaMapperGenerator();
+            return null;
         } else if ("MIXEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
             javaGenerator = new MixedClientGenerator();
         } else if ("ANNOTATEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
             javaGenerator = new AnnotatedClientGenerator();
         } else if ("MAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
             javaGenerator = new JavaMapperGenerator();
+            return null;
         } else {
             javaGenerator = (AbstractJavaClientGenerator) ObjectFactory
                     .createInternalObject(type);
@@ -189,6 +193,18 @@ public class IntrospectedTableMyBatis3Impl extends IntrospectedTable {
         //添加CommonService
         if(true){
             AbstractJavaGenerator javaGenerator = new CommonServiceGenerator();
+            initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+            javaModelGenerators.add(javaGenerator);
+        }
+        //添加CommonServiceImpl
+        if(true){
+            AbstractJavaGenerator javaGenerator = new CommonServiceImplGenerator();
+            initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+            javaModelGenerators.add(javaGenerator);
+        }
+        //添加dao
+        if(true){
+            AbstractJavaGenerator javaGenerator = new DaoGenerator();
             initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
             javaModelGenerators.add(javaGenerator);
         }

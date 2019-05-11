@@ -25,6 +25,8 @@ import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.XmlConstants;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.cqElements.*;
 import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.*;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
 /**
  * 
@@ -33,12 +35,15 @@ import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.*;
  */
 public class XMLMapperGenerator extends AbstractXmlGenerator {
 
+    private Log logger = LogFactory.getLog(this.getClass());
+
     public XMLMapperGenerator() {
         super();
     }
 
     protected XmlElement getSqlMapElement() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        logger.error("开始生成"+table+" XML文件");
         progressCallback.startTask(getString(
                 "Progress.12", table.toString())); //$NON-NLS-1$
         XmlElement answer = new XmlElement("mapper"); //$NON-NLS-1$

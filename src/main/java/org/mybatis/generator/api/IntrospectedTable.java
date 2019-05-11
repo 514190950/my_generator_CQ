@@ -58,15 +58,27 @@ public abstract class IntrospectedTable {
         ATTR_MYBATIS3_XML_MAPPER_PACKAGE,
         ATTR_MYBATIS3_XML_MAPPER_FILE_NAME,
         //长护险MVC内容
+        //controller
         ATTR_MYBATIS3_CONTROLLER_PACKAGE,
         ATTR_MYBATIS3_CONTROLLER_FILE_NAME,
         ATTR_MYBATIS3_CONTROLLER_TYPE,
+        //mngService
         ATTR_MYBATIS3_MNG_SERVICE_PACKAGE,
         ATTR_MYBATIS3_MNG_SERVICE_FILE_NAME,
         ATTR_MYBATIS3_MNG_SERVICE_TYPE,
+        //commonService
         ATTR_MYBATIS3_COMMON_SERVICE_PACKAGE,
         ATTR_MYBATIS3_COMMON_SERVICE_FILE_NAME,
         ATTR_MYBATIS3_COMMON_SERVICE_TYPE,
+        //commonServiceImpl
+        ATTR_MYBATIS3_COMMON_SERVICE_IMPL_PACKAGE,
+        ATTR_MYBATIS3_COMMON_SERVICE_IMPL_FILE_NAME,
+        ATTR_MYBATIS3_COMMON_SERVICE_IMPL_TYPE,
+
+        //dao
+        ATTR_MYBATIS3_DAO_PACKAGE,
+        ATTR_MYBATIS3_DAO_FILE_NAME,
+        ATTR_MYBATIS3_DAO_TYPE,
 
 
         //添加重庆长护险两个实体类
@@ -533,6 +545,9 @@ public abstract class IntrospectedTable {
         setMyBatis3ControllerFileName(calculateMyBatis3ControllerFileName());
         setMyBatis3ModelQueryFileName(calculateMyBatis3ModelQueryFileName());
         setMyBatis3ModelInputFileName(calculateMyBatis3ModelInputFileName());
+        setMyBatis3CommonServiceName(calculateMyBatis3ModelCommonServiceFileName());
+        setMyBatis3MngServiceFileName(calculateMyBatis3ModelMngServiceFileName());
+        setMyBatis3CommonServiceImplName(calculateMyBatis3ModelCommonServiceImplFileName());
 
         setSqlMapFullyQualifiedRuntimeTableName(calculateSqlMapFullyQualifiedRuntimeTableName());
         setSqlMapAliasedFullyQualifiedRuntimeTableName(calculateSqlMapAliasedFullyQualifiedRuntimeTableName());
@@ -890,6 +905,28 @@ public abstract class IntrospectedTable {
 
         return sb.toString();
     }
+    /**
+     * 功能描述:获取dao的包路径
+     *
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/10 11:45
+     */
+    protected String calculateDaoInterfacePackage() {
+        DaoGeneratorConfiguration config = context
+                .getDaoGeneratorConfiguration();
+        if (config == null) {
+            return null;
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(config.getTargetPackage());
+
+        sb.append(fullyQualifiedTable.getSubPackage(isSubPackagesEnabled(config)));
+
+        return sb.toString();
+    }
 
 
 /**
@@ -953,6 +990,21 @@ public abstract class IntrospectedTable {
         sb.append("CommonService"); //$NON-NLS-1$
         setMyBatis3CommonServiceType(sb.toString());
 
+        sb.setLength(0);
+        sb.append(calculateCommonServiceInterfacePackage());
+        sb.append(".impl");
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("CommonServiceImpl"); //$NON-NLS-1$
+        setMyBatis3CommonServiceImplType(sb.toString());
+
+        sb.setLength(0);
+        sb.append(calculateDaoInterfacePackage());
+        sb.append('.');
+        sb.append(fullyQualifiedTable.getDomainObjectName());
+        sb.append("DAO"); //$NON-NLS-1$
+        setMyBatis3DaoType(sb.toString());
+
 
 
 
@@ -989,12 +1041,14 @@ public abstract class IntrospectedTable {
 
         sb.setLength(0);
         sb.append(pakkage);
+        sb.append(".query");
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectQueryName());
         setModelQueryType(sb.toString());
 
         sb.setLength(0);
         sb.append(pakkage);
+        sb.append(".input");
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectInputName());
         setModelInputType(sb.toString());
@@ -1086,6 +1140,42 @@ public abstract class IntrospectedTable {
     protected String calculateMyBatis3ModelInputFileName() {
         StringBuilder sb = new StringBuilder();
         sb.append(fullyQualifiedTable.getDomainObjectInputName());
+        return sb.toString();
+    }
+    /**
+     * 功能描述:commonService名称
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/7 15:10
+     */
+    protected String calculateMyBatis3ModelCommonServiceImplFileName() {
+        String commonServiceFileName = calculateMyBatis3ModelCommonServiceFileName();
+        commonServiceFileName+="Impl";
+        return commonServiceFileName;
+    }
+    /**
+     * 功能描述:commonService名称
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/7 15:10
+     */
+    protected String calculateMyBatis3ModelCommonServiceFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getDomainObjectName()).append("CommonService");
+        return sb.toString();
+    }
+    /**
+     * 功能描述:mngService名称
+     * @auther: gxz
+     * @param:
+     * @return:
+     * @date: 2019/5/7 15:10
+     */
+    protected String calculateMyBatis3ModelMngServiceFileName() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fullyQualifiedTable.getDomainObjectName()).append("MngService");
         return sb.toString();
     }
 
@@ -1331,6 +1421,16 @@ public abstract class IntrospectedTable {
         return  internalAttributes.get(
                 InternalAttribute.ATTR_MYBATIS3_MNG_SERVICE_TYPE);
     }
+    public void setMyBatis3MngServiceFileName(String myBatis3MngServiceFileName) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_MNG_SERVICE_FILE_NAME,
+                myBatis3MngServiceFileName);
+    }
+    public String getMyBatis3MngServiceFileName() {
+        return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_MNG_SERVICE_FILE_NAME);
+    }
+
     public void setMyBatis3CommonServiceType(String myBatis3CommonServiceType) {
         internalAttributes.put(
                 InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_TYPE,
@@ -1340,6 +1440,51 @@ public abstract class IntrospectedTable {
         return  internalAttributes.get(
                 InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_TYPE);
     }
+    public void setMyBatis3CommonServiceName(String myBatis3CommonServiceName) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_FILE_NAME,
+                myBatis3CommonServiceName);
+    }
+    public String getMyBatis3CommonServiceName() {
+        return  internalAttributes.get(InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_FILE_NAME);
+    }
+    public void setMyBatis3CommonServiceImplType(String myBatis3CommonServiceImplType) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_IMPL_TYPE,
+                myBatis3CommonServiceImplType);
+    }
+    public String getMyBatis3CommonServiceImplType() {
+        return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_IMPL_TYPE);
+    }
+    public void setMyBatis3CommonServiceImplName(String myBatis3CommonServiceImplName) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_IMPL_FILE_NAME,
+                myBatis3CommonServiceImplName);
+    }
+    public String getMyBatis3CommonServiceImplName() {
+        return  internalAttributes.get(InternalAttribute.ATTR_MYBATIS3_COMMON_SERVICE_IMPL_FILE_NAME);
+    }
+
+    public void setMyBatis3DaoType(String myBatis3DaoType) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_DAO_TYPE,
+                myBatis3DaoType);
+    }
+    public String getMyBatis3DaoType() {
+        return  internalAttributes.get(
+                InternalAttribute.ATTR_MYBATIS3_DAO_TYPE);
+    }
+    public void setMyBatis3DaoName(String myBatis3DaoFileName) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_MYBATIS3_DAO_FILE_NAME,
+                myBatis3DaoFileName);
+    }
+    public String getMyBatis3DaoName() {
+        return  internalAttributes.get(InternalAttribute.ATTR_MYBATIS3_DAO_FILE_NAME);
+    }
+
+
     public void setMyBatis3ControllerFileName(String myBatis3ControllerName) {
         internalAttributes.put(
                 InternalAttribute.ATTR_MYBATIS3_CONTROLLER_FILE_NAME,

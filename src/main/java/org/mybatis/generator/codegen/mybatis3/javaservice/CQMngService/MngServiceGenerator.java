@@ -8,6 +8,8 @@ import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.RootClassInfo;
+import org.mybatis.generator.logging.Log;
+import org.mybatis.generator.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,12 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  * @date:
  */
 public class MngServiceGenerator extends AbstractJavaGenerator {
+    private Log logger = LogFactory.getLog(this.getClass());
+
     private static final String[] IMPORT_ARRAY = new String[]{"java.util.Date","org.springframework.beans.BeanUtils",
     "org.springframework.stereotype.Service","com.wondersgroup.healthins.cms.base.CmsBaseServiceImpl","com.wondersgroup.healthins.plugin.api.dto.ResultDto",
-            "com.wondersgroup.healthins.plugin.db.pager.Pager","com.wondersgroup.ltcins.intact.core.dto.rsp.ResultDTO"};
-     String   COMMON_SERVICE_NAME = "assessQuestionPicCommonService";
+            "com.wondersgroup.healthins.plugin.db.pager.Pager","com.wondersgroup.ltcins.intact.core.dto.rsp.ResultDTO",
+            "com.alibaba.dubbo.config.annotation.Reference","java.io.Serializable","java.util.List",};
 
     public MngServiceGenerator() {
         super();
@@ -32,7 +36,9 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
+
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
+        logger.error("开始生成"+table+"  MngService");
         progressCallback.startTask(getString(
                 "Progress.8", table.toString())); //$NON-NLS-1$
         CommentGenerator commentGenerator = context.getCommentGenerator();
@@ -42,11 +48,17 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         for (String s : IMPORT_ARRAY) {
             topLevelClass.addImportedType(s);
         }
+        topLevelClass.addImportedType(introspectedTable.getMyBatis3CommonServiceType());
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.setSuperClass("CmsBaseServiceImpl<"+introspectedTable.getMyBatis3ModelQueryFileName()+","+introspectedTable.getMyBatis3ModelInputFileName()+">");
         topLevelClass.addAnnotation("@Service");
         commentGenerator.addJavaFileComment(topLevelClass);
-
+        Field field=new Field();
+        field.setName(formatTypeNameToParamName(introspectedTable.getMyBatis3CommonServiceName()));
+        field.setType(new FullyQualifiedJavaType(introspectedTable.getMyBatis3CommonServiceType()));
+        field.addAnnotation("@Reference");
+        field.setVisibility(JavaVisibility.PRIVATE);
+        topLevelClass.addField(field);
         FullyQualifiedJavaType superClass = getSuperClass();
         if (superClass != null) {
             topLevelClass.setSuperClass(superClass);
@@ -175,6 +187,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
     private Method getQuery() {
         String pojoType = introspectedTable.getTableConfiguration().getDomainObjectName();
         String pojoName = formatTypeNameToParamName(pojoType);
+        String commonServiceName=introspectedTable.getMyBatis3CommonServiceName();
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addAnnotation("@Override");
@@ -188,7 +201,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         sb=getCopyParamString();
         method.addBodyLine(sb.toString());
         sb.setLength(0);
-        sb.append("return assessQuestionPicCommonService.queryPager(pageSize, pageNo, "+pojoName+");"); //$NON-NLS-1$
+        sb.append("return "+formatTypeNameToParamName(commonServiceName)+".queryPager(pageSize, pageNo, "+pojoName+");"); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
         return method;
     }
@@ -198,7 +211,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         String pojoName = formatTypeNameToParamName(pojoType);
         String primaryKeyType=introspectedTable.getPrimaryKeyColumns().
                 size() == 0 ? "Integer" : formatTypeNameToFirstUp(introspectedTable.getPrimaryKeyColumns().get(0).getJdbcTypeName());
-
+        String commonServiceName=introspectedTable.getMyBatis3CommonServiceName();
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addAnnotation("@Override");
@@ -215,7 +228,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         sb.append(pojoName+".setCreatedTime(new Date());");
         method.addBodyLine(sb.toString());
         sb.setLength(0);
-        sb.append("ResultDTO<Serializable> resultDTO = "+COMMON_SERVICE_NAME+".save("+pojoName+");");
+        sb.append("ResultDTO<Serializable> resultDTO = "+formatTypeNameToParamName(commonServiceName)+".save("+pojoName+");");
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         sb.append("resultDto.setParamObj(("+primaryKeyType+")resultDTO.getReturnObj());");
@@ -231,6 +244,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
                 size() == 0 ? "Integer" : formatTypeNameToFirstUp(introspectedTable.getPrimaryKeyColumns().get(0).getJdbcTypeName());
         String pojoInputType=introspectedTable.getMyBatis3ModelInputFileName();
         String pojoInputName = formatTypeNameToParamName(pojoInputType);
+        String commonServiceName=introspectedTable.getMyBatis3CommonServiceName();
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addAnnotation("@Override");
@@ -238,7 +252,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         method.setName("loadForEdit");
         method.setReturnType(new FullyQualifiedJavaType(introspectedTable.getMyBatis3ModelInputFileName()));
         StringBuilder sb = new StringBuilder();
-        sb.append(pojoType+" "+pojoName+" = "+COMMON_SERVICE_NAME+".findById("+primaryKeyType+".valueOf(id.toString()));");
+        sb.append(pojoType+" "+pojoName+" = "+formatTypeNameToParamName(commonServiceName)+".findById("+primaryKeyType+".valueOf(id.toString()));");
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         sb.append(pojoInputType+" "+pojoInputName+" = new "+pojoInputType+"();");
@@ -256,6 +270,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         String primaryKeyType=introspectedTable.getPrimaryKeyColumns().
                 size() == 0 ? "Integer" : formatTypeNameToFirstUp(introspectedTable.getPrimaryKeyColumns().get(0).getJdbcTypeName());
         String pojoInputType=introspectedTable.getMyBatis3ModelInputFileName();
+        String commonServiceName=introspectedTable.getMyBatis3CommonServiceName();
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addAnnotation("@Override");
@@ -266,7 +281,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         StringBuilder sb=getNewResultDto();
         method.addBodyLine(sb.toString());
         sb.setLength(0);
-        sb.append("ResultDTO<"+primaryKeyType+"> resultDTO = assessQuestionPicCommonService.delete("+primaryKeyType+".valueOf(id.toString()));");
+        sb.append("ResultDTO<"+primaryKeyType+"> resultDTO = "+formatTypeNameToParamName(commonServiceName)+".delete("+primaryKeyType+".valueOf(id.toString()));");
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         sb.append("resultDto.setParamObj(resultDTO.getReturnObj());");
@@ -282,6 +297,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         String primaryKeyType=introspectedTable.getPrimaryKeyColumns().
                 size() == 0 ? "Integer" : formatTypeNameToFirstUp(introspectedTable.getPrimaryKeyColumns().get(0).getJdbcTypeName());
         String pojoInputType=introspectedTable.getMyBatis3ModelInputFileName();
+        String commonServiceName=introspectedTable.getMyBatis3CommonServiceName();
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.addAnnotation("@Override");
@@ -301,7 +317,7 @@ public class MngServiceGenerator extends AbstractJavaGenerator {
         sb.append(pojoName+".setId("+primaryKeyType+".valueOf(id.toString()));");
         method.addBodyLine(sb.toString());
         sb.setLength(0);
-        sb.append("ResultDTO<"+primaryKeyType+"> resultDTO =  assessQuestionPicCommonService.update("+pojoName+");");
+        sb.append("ResultDTO<"+primaryKeyType+"> resultDTO =  "+formatTypeNameToParamName(commonServiceName)+".update("+pojoName+");");
         method.addBodyLine(sb.toString());
         sb.setLength(0);
         sb.append("resultDto.setParamObj(resultDTO.getReturnObj());");

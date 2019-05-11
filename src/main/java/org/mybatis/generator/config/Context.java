@@ -87,11 +87,12 @@ public class Context extends PropertyHolder {
     private XmlFormatter xmlFormatter;
     //controller
     private ControllerGeneratorConfiguration controllerGeneratorConfiguration;
-    //controller
+    //mngService
     private MngServiceGeneratorConfiguration mngServiceGeneratorConfiguration;
-    //controller
+    //commonService
     private CommonServiceGeneratorConfiguration commonServiceGeneratorConfiguration;
-
+    //dao
+    private DaoGeneratorConfiguration daoGeneratorConfiguration;
     /**
      * Constructs a Context object.
      * 
@@ -145,6 +146,14 @@ public class Context extends PropertyHolder {
 
     public void setCommonServiceGeneratorConfiguration(CommonServiceGeneratorConfiguration commonServiceGeneratorConfiguration) {
         this.commonServiceGeneratorConfiguration = commonServiceGeneratorConfiguration;
+    }
+
+    public DaoGeneratorConfiguration getDaoGeneratorConfiguration() {
+        return daoGeneratorConfiguration;
+    }
+
+    public void setDaoGeneratorConfiguration(DaoGeneratorConfiguration daoGeneratorConfiguration) {
+        this.daoGeneratorConfiguration = daoGeneratorConfiguration;
     }
 
     public JavaModelGeneratorConfiguration getJavaModelGeneratorConfiguration() {

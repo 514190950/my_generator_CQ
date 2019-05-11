@@ -174,6 +174,9 @@ public class MyBatisGeneratorConfigurationParser {
             else if ("commonServiceGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseCommonServiceGenerator(context, childNode);
             }
+            else if ("daoGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseDaoGenerator(context, childNode);
+            }
         }
     }
 
@@ -271,6 +274,30 @@ public class MyBatisGeneratorConfigurationParser {
 
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(commonServiceGeneratorConfiguration, childNode);
+            }
+        }
+    }
+    private void parseDaoGenerator(Context context, Node node) {
+       DaoGeneratorConfiguration daoGeneratorConfiguration = new DaoGeneratorConfiguration();
+        context.setDaoGeneratorConfiguration(daoGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+
+        daoGeneratorConfiguration.setTargetPackage(targetPackage);
+        daoGeneratorConfiguration.setTargetProject(targetProject);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(daoGeneratorConfiguration, childNode);
             }
         }
     }
